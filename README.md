@@ -1,8 +1,13 @@
 # 拍纸片，出听写音频
 
+![license](https://img.shields.io/badge/license-MIT-green?style=flat-square)
+![python](https://img.shields.io/badge/python-3.10%2B-blue?style=flat-square)
+![release](https://img.shields.io/github/v/release/YanLiu-t/word-dictation?style=flat-square)
+![platform](https://img.shields.io/badge/platform-Windows-lightgrey?style=flat-square)
+
 我把自己手抄的单词本拍成照片，让模型认出来，再合成成可以戴着耳机听的音频。数据库就是一张 tsv 表，你随时能改。
 
-两种节奏：
+三种节奏：
 
 - 读一遍：英文 → 中文
 - 读两遍：英文 → 中文 → 英文 → 中文
@@ -11,6 +16,21 @@
 合成前还能选整体语速：正常、快 1.5 倍、慢 0.5 倍。
 
 一开始只是为了自己背单词，后来发现身边人也想用，就整理成了现在这样。高中、四级、六级的词都能用，不是只认六级。
+
+> 免安装包：[Releases](https://github.com/YanLiu-t/word-dictation/releases/latest) 下载 `word-dictation-windows.zip`，解压双击就能用。
+
+## 目录
+
+- [先说缺点](#先说缺点)
+- [怎么用](#怎么用)
+- [跑一遍](#跑一遍)
+- [中间那张表](#中间那张表)
+- [我踩过的坑](#我踩过的坑)
+- [网页版](#网页版)
+- [常用命令](#常用命令)
+- [节奏和音色](#节奏和音色)
+- [常见问题](#常见问题)
+- [许可](#许可)
 
 ## 先说缺点
 
@@ -149,7 +169,7 @@ dictation web
 
 想改就复制 `config.example.json` 成 `config.json` 改数字，不用动代码。英式拼写读错的，在 `pronounce` 里加一行，比如 `plough` 读成 `plow`。
 
-## 目录
+## 项目结构
 
 ```text
 docs/SOP.md          完整流程，改流程先改这里
@@ -163,8 +183,34 @@ config.example.json  音色、停顿、读音
 
 用的是 `edge-tts`，调微软 Edge 的朗读接口，不用 Key，音质还行。但它不是官方接口，自己听没问题，别拿去做大规模分发。
 
-## 其他
+## 常见问题
 
-代码 MIT。提示词和文档一起开源，随便改。
+**一定要联网吗？**
+识别和合成都要联网。识别调视觉模型，合成调 Edge 朗读接口。词表和音频都在本地。
+
+**照片会不会传到别的地方？**
+只传给你选的那家识别服务，不经过我这里，也没有中转服务器。Key 存在本机 `.env`。
+
+**免费额度够用吗？**
+十页大概十几次请求，智谱的免费额度能撑一阵。具体看各家当前政策。
+
+**Windows 提示「已保护你的电脑」？**
+点「更多信息」→「仍要运行」。exe 没有买代码签名证书。
+
+**Mac 能用吗？**
+命令行可以，`pip install -e .` 之后一样跑。免安装包目前只有 Windows。
+
+**识别不准怎么办？**
+先看 `note` 列写了什么，很多是「两遍不一致」或「字迹像 XX」。改完点保存，再点合成，只有改动的那几个词会重新合成。
+
+**能不能把多页合成一个音频？**
+可以，一个批次放多张照片，最后出来的就是一个文件，按页顺序读。
+
+**读三遍会不会太长？**
+会。一百多个词三遍大概半小时，建议按页拆成小批次。
+
+## 许可
+
+MIT License，见 [LICENSE](LICENSE)。提示词和文档一起开源，随便改。
 
 有 bug 或者更好的识别思路，欢迎提 issue。
