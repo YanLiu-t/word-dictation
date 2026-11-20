@@ -8,14 +8,26 @@ import threading
 import webbrowser
 from pathlib import Path
 
-PORT = 8501
-
 
 def _resource_dir() -> Path:
     """打包后资源在 _MEIPASS（onedir 模式为 _internal）；源码运行时在仓库根。"""
     if getattr(sys, "frozen", False):
         return Path(getattr(sys, "_MEIPASS", Path(sys.executable).parent))
     return Path(__file__).resolve().parents[1]
+
+
+def _free_port(start: int = 8501, end: int = 8520) -> int:
+    """8501 被占用时自动往后找，避免双击后一闪就退。"""
+    import socket
+
+    for port in range(start, end):
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+            try:
+                sock.bind(("127.0.0.1", port))
+            except OSError:
+                continue
+            return port
+    return start
 
 
 def main() -> int:
@@ -30,10 +42,11 @@ def main() -> int:
     if not script.is_file():
         script = base / "src" / "dictation" / "web.py"
 
-    url = f"http://localhost:{PORT}"
+    port = _free_port()
+    url = f"http://localhost:{port}"
     threading.Timer(3.0, lambda: webbrowser.open(url)).start()
     print(f"网页版已启动：{url}")
-    print("关闭这个窗口即停止服务。")
+    print("关掉这个窗口就等于停止服务。")
 
     # 显式导入，保证 PyInstaller 把这些模块打进包里
     import dictation  # noqa: F401
@@ -44,7 +57,7 @@ def main() -> int:
     sys.argv = [
         "streamlit", "run", str(script),
         "--server.address", "localhost",
-        "--server.port", str(PORT),
+        "--server.port", str(port),
         "--server.headless", "true",
         "--browser.gatherUsageStats", "false",
         "--global.developmentMode", "false",
@@ -53,4 +66,12 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    try:
+        raise SystemExit(main())
+    except SystemExit:
+        raise
+    except Exception:
+        import traceback
+
+        traceback.print_exc()
+        input("启动失败，把上面的报错发给我，按回车关闭")
