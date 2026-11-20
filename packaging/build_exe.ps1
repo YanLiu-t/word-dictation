@@ -6,7 +6,7 @@ $root = Split-Path -Parent $PSScriptRoot
 Set-Location $root
 
 python -m PyInstaller --noconfirm --clean --onedir --console `
-    --name cet6-dictation `
+    --name word-dictation `
     --paths "src" `
     --add-data "src/dictation/web.py;ui" `
     --add-data "prompts;prompts" `
@@ -18,5 +18,5 @@ python -m PyInstaller --noconfirm --clean --onedir --console `
     packaging\launcher.py
 
 Write-Host ""
-Write-Host "Done: dist\cet6-dictation\cet6-dictation.exe"
-Write-Host "Zip the whole dist\cet6-dictation folder and upload it to GitHub Releases."
+Write-Host "Done: dist\word-dictation\word-dictation.exe"
+Write-Host "Zip the whole dist\word-dictation folder and upload it to GitHub Releases."

@@ -7,7 +7,7 @@
 - 读一遍：英文 → 中文
 - 读两遍：英文 → 中文 → 英文 → 中文
 
-一开始只是为了自己复习六级词汇，后来发现身边人也想用，就整理成了现在这样。
+一开始只是为了自己背单词，后来发现身边人也想用，就整理成了现在这样。高中、四级、六级的词都能用，不是只认六级。
 
 ## 先说缺点
 
@@ -23,7 +23,7 @@
 
 ### 不想装环境
 
-去 Releases 下 `cet6-dictation-windows.zip`，解压，进文件夹双击 `cet6-dictation.exe`。浏览器会自己打开一个本地页面，左边填一次 API Key 就能用。不需要装 Python，数据都在你自己电脑上。
+去 Releases 下 `word-dictation-windows.zip`，解压，进文件夹双击 `word-dictation.exe`。浏览器会自己打开一个本地页面，左边填一次 API Key 就能用。不需要装 Python，数据都在你自己电脑上。
 
 Key 在 exe 同目录的 `.env` 里，换电脑把整个文件夹拷走就行。
 
@@ -32,8 +32,8 @@ Key 在 exe 同目录的 `.env` 里，换电脑把整个文件夹拷走就行。
 Python 3.10 以上。
 
 ```bash
-git clone <你的仓库地址>
-cd cet6-dictation
+git clone https://github.com/YanLiu-t/word-dictation.git
+cd word-dictation
 python -m pip install -U pip
 pip install -e ".[web]"
 ```

@@ -38,7 +38,7 @@ PROVIDERS = {
 
 STATUS_LABEL = {"ok": "ok（进音频）", "review": "review（待核对）", "dup": "dup（重复）", "skip": "skip（不要）"}
 
-st.set_page_config(page_title="CET6 单词听写音频生成器", page_icon="🎧", layout="wide")
+st.set_page_config(page_title="单词听写音频", page_icon="🎧", layout="wide")
 
 
 def save_key(provider: str, value: str) -> Path:
@@ -102,7 +102,7 @@ def render_sidebar() -> str:
             "十页差不多十几次请求，免费额度够用一阵。"
         )
         st.divider()
-        st.caption(f"cet6-dictation v{__version__}")
+        st.caption(f"word-dictation v{__version__}")
     return provider
 
 

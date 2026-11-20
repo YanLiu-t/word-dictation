@@ -107,7 +107,7 @@ def cmd_build(args) -> int:
 
 
 def cmd_doctor(args) -> int:
-    print(f"cet6-dictation {__version__}")
+    print(f"word-dictation {__version__}")
     print(f"Python {sys.version.split()[0]}（需要 >= 3.10）")
     ok = True
     for mod in ("edge_tts", "lameenc"):
@@ -171,7 +171,7 @@ def build_parser() -> argparse.ArgumentParser:
         prog="dictation",
         description="手写单词笔记照片 → 词表 → 中英交替听写音频",
     )
-    parser.add_argument("--version", action="version", version=f"cet6-dictation {__version__}")
+    parser.add_argument("--version", action="version", version=f"word-dictation {__version__}")
     sub = parser.add_subparsers(dest="command", required=True)
 
     p = sub.add_parser("extract", help="调用识别服务，把图片转成 ocr/*.json")

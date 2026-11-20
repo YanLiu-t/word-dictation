@@ -3,7 +3,7 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "cet6-dictation"
+name = "word-dictation"
 version = "1.0.0"
 description = "手写英语单词笔记照片 → 分页词表 → 中英交替听写音频"
 requires-python = ">=3.10"
