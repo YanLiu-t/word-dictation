@@ -1,0 +1,24 @@
+{
+  "voices": {
+    "en": { "voice": "en-US-AriaNeural", "rate": "-15%" },
+    "zh": { "voice": "zh-CN-XiaoxiaoNeural", "rate": "-10%" }
+  },
+  "gaps_ms": {
+    "en_zh": 200,
+    "between_rounds": 450,
+    "word": 900
+  },
+  "pronounce": {
+    "plough": "plow",
+    "tyre": "tire",
+    "odour": "odor",
+    "splendour": "splendor"
+  },
+  "ocr": {
+    "tiles": 2,
+    "tile_overlap": 0.08,
+    "cross_check": true,
+    "preprocess": true
+  },
+  "concurrency": 8
+}

@@ -1,0 +1,19 @@
+# 依赖与虚拟环境
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.egg-info/
+build/
+dist/
+*.spec
+
+# 本机密钥，绝不提交
+.env
+
+# 批次产物（照片、词表、音频一律不入库）
+批次/
+input/
+ocr/
+out/
+.cache/
