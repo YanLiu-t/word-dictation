@@ -136,11 +136,12 @@ def main() -> None:
     with st.expander("① 传照片认词", expanded=True):
         batch_name = st.text_input("批次名称", value="10页", help="音频文件名会用这个")
         files = st.file_uploader(
-            "选择照片（一次 3–10 张就行）",
+            "选择照片（一次 3–10 张，多点也行）",
             type=["jpg", "jpeg", "png", "webp", "bmp"],
             accept_multiple_files=True,
         )
         st.caption("顺序按你选文件的顺序来。想严格按页排，先把文件改成 01、02、03 再传。")
+        st.caption("每张照片是单独认的，传多少张都不影响单张的准确率，只是等得久一点。")
 
         start = st.button("开始识别", type="primary", disabled=not files)
         if start and files:
