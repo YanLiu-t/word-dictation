@@ -96,10 +96,10 @@ def cmd_build(args) -> int:
     cfg = config.load(batch.root)
     if args.backend != "edge":
         raise RuntimeError("当前版本仅支持 edge 后端；离线 piper 后端在后续版本提供")
-    info = build.run(batch, cfg, name=args.name)
-    print(f"完成，朗读 {info['count']} 个词，耗时 {info['seconds']:.1f} 秒")
-    print(f"  读一遍：{info['once']}")
-    print(f"  读两遍：{info['twice']}")
+    info = build.run(batch, cfg, name=args.name, rounds=args.rounds, speed=args.speed)
+    print(f"完成，朗读 {info['count']} 个词，耗时 {info['seconds']:.1f} 秒（{info['speed']:g}×）")
+    for label, detail in info["outputs"]:
+        print(f"  {label}：{detail}")
     if info["skipped"]:
         print(f"  跳过 {info['skipped']} 条（非 ok 状态）")
     print(f"输出目录：{batch.out_dir}")
@@ -196,9 +196,13 @@ def build_parser() -> argparse.ArgumentParser:
                    help="只检查 ok 行（ok），或连同 review 一起查（all）")
     p.set_defaults(func=cmd_verify)
 
-    p = sub.add_parser("build", help="按词表合成读一遍 / 读两遍音频")
+    p = sub.add_parser("build", help="按词表合成音频，可选读一遍 / 两遍 / 三遍")
     p.add_argument("batch", help="批次目录")
     p.add_argument("--name", default=None, help="输出文件名前缀，默认取批次目录名")
+    p.add_argument("--rounds", type=int, choices=[1, 2, 3], default=None,
+                   help="读几遍；不填则同时生成读一遍和读两遍")
+    p.add_argument("--speed", type=float, default=1.0,
+                   help="语速倍数，1.0 正常，1.5 快，0.5 慢")
     p.add_argument("--backend", default="edge", choices=["edge"], help="语音后端")
     p.set_defaults(func=cmd_build)
 

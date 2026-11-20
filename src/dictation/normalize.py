@@ -216,8 +216,11 @@ def append_audio_report(path: Path, info: dict) -> None:
         "## 音频",
         "",
         f"- 朗读词数：{info['count']}",
-        f"- 读一遍：{info['once']}",
-        f"- 读两遍：{info['twice']}",
+        f"- 语速：{info.get('speed', 1.0):g}×",
+    ]
+    for label, detail in info.get("outputs", []):
+        lines.append(f"- {label}：{detail}")
+    lines += [
         f"- 合成耗时：{info['seconds']:.1f} 秒",
     ]
     if info.get("skipped"):

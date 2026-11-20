@@ -251,10 +251,25 @@ def main() -> None:
     st.caption(f"这次会读 {ok_count} 个词。文件夹：{batch.root}")
 
     st.subheader("③ 出音频")
+    c1, c2 = st.columns(2)
+    rounds = c1.selectbox(
+        "读几遍",
+        options=[1, 2, 3],
+        index=1,
+        format_func=lambda n: {1: "一遍（词 → 义）", 2: "两遍（词 → 义 → 词 → 义）",
+                               3: "三遍（词义重复三次）"}[n],
+    )
+    speed = c2.selectbox(
+        "语速",
+        options=[1.0, 1.5, 0.5],
+        index=0,
+        format_func=lambda v: {1.0: "正常 1.0×", 1.5: "快 1.5×", 0.5: "慢 0.5×"}[v],
+    )
     if st.button("开始合成", type="primary"):
         with st.spinner("第一次会慢一点，之后就快了"):
             try:
-                info = builder.run(batch, config.load(batch.root), name=batch.name, quiet=True)
+                info = builder.run(batch, config.load(batch.root), name=batch.name,
+                                   quiet=True, rounds=rounds, speed=speed)
                 st.session_state["built"] = info
                 st.session_state["batch"] = str(batch.root)
             except Exception as exc:
@@ -262,10 +277,13 @@ def main() -> None:
 
     info = st.session_state.get("built")
     if info:
-        st.success(f"好了，读了 {info['count']} 个词，用了 {info['seconds']:.1f} 秒")
-        for label, path in (("读一遍", batch.out_dir / f"{batch.name}_读一遍.mp3"),
-                            ("读两遍", batch.out_dir / f"{batch.name}_读两遍.mp3"),
-                            ("朗读脚本", batch.out_dir / f"{batch.name}_脚本.txt")):
+        st.success(f"好了，读了 {info['count']} 个词，{info['speed']:g}× 语速，用了 {info['seconds']:.1f} 秒")
+        downloads = []
+        for (label, _), path in zip(info.get("outputs", []), info.get("files", [])):
+            downloads.append((label, Path(path)))
+        if info.get("script"):
+            downloads.append(("朗读脚本", Path(info["script"])))
+        for label, path in downloads:
             if path.is_file():
                 mime = "audio/mpeg" if path.suffix == ".mp3" else "text/plain"
                 st.download_button(

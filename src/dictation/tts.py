@@ -46,8 +46,17 @@ async def _one(text: str, voice: str, rate: str, path: Path, sem: asyncio.Semaph
     raise RuntimeError(f"合成失败：{text!r}（{last_err}）")
 
 
+def scale_rate(rate: str, factor: float = 1.0) -> str:
+    """把配置里的语速按倍数缩放，如 -15% × 1.5 → +28%。"""
+    if abs(factor - 1.0) < 1e-6:
+        return rate
+    base = float(str(rate).strip().rstrip("%") or 0) / 100.0
+    total = max(0.1, (1 + base) * factor) - 1
+    return f"{total * 100:+.0f}%"
+
+
 def synth_pairs(pairs: list[tuple[str, str]], cache_dir: Path, cfg: dict,
-                progress=None) -> dict[tuple[str, str], Path]:
+                progress=None, speed: float = 1.0) -> dict[tuple[str, str], Path]:
     """pairs 为 (文本, 语言) 列表，返回 {(文本, 语言): mp3 路径}，已去重。"""
     cache_dir = Path(cache_dir)
     cache_dir.mkdir(parents=True, exist_ok=True)
@@ -67,9 +76,10 @@ def synth_pairs(pairs: list[tuple[str, str]], cache_dir: Path, cfg: dict,
     jobs = []
     for text, lang in uniq:
         spec = voices[lang]
-        path = cache_path(cache_dir, text, spec["voice"], spec["rate"])
+        rate = scale_rate(spec["rate"], speed)
+        path = cache_path(cache_dir, text, spec["voice"], rate)
         mapping[(text, lang)] = path
-        jobs.append(_one(text, spec["voice"], spec["rate"], path, sem, tick))
+        jobs.append(_one(text, spec["voice"], rate, path, sem, tick))
 
     async def run() -> None:
         results = await asyncio.gather(*jobs, return_exceptions=True)

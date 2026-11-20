@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "word-dictation"
-version = "1.0.0"
+version = "1.1.0"
 description = "手写英语单词笔记照片 → 分页词表 → 中英交替听写音频"
 requires-python = ">=3.10"
 dependencies = [
